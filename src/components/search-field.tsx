@@ -1,6 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import React from "react";
+import debounce from "lodash.debounce";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 interface SearchFieldProps {
   placeholder?: string;
@@ -13,9 +14,28 @@ export const SearchField: React.FC<SearchFieldProps> = ({
   onChange,
   className,
 }) => {
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onChange?.(event.target.value);
-  };
+  const [value, setValue] = useState("");
+
+  const debouncedOnChange = useRef(
+    debounce((value: string) => {
+      onChange?.(value);
+    }, 300)
+  ).current;
+
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = event.target.value;
+      setValue(newValue);
+      debouncedOnChange(newValue);
+    },
+    [debouncedOnChange]
+  );
+
+  useEffect(() => {
+    return () => {
+      debouncedOnChange.cancel();
+    };
+  }, [debouncedOnChange]);
 
   return (
     <div className={cn("relative w-[204px]", className)}>
@@ -24,6 +44,7 @@ export const SearchField: React.FC<SearchFieldProps> = ({
         placeholder={placeholder}
         className="h-10 pl-10 pr-4 text-sm text-gray-60 bg-white rounded focus-visible:ring-0 focus-visible:ring-offset-0"
         onChange={handleChange}
+        value={value}
       />
       <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
         <svg

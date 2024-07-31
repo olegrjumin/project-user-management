@@ -1,11 +1,12 @@
 import { User } from "@/types";
 import usersData from "./users.json";
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+export const fetchUsers = async (search: string = ""): Promise<User[]> => {
+  const filteredUsers = usersData.users.filter(
+    (user) =>
+      user.name.toLowerCase().includes(search.toLowerCase()) ||
+      user.email.toLowerCase().includes(search.toLowerCase())
+  );
 
-export const fetchUsers = async (): Promise<User[]> => {
-  const sleepTime = import.meta.env.DEV ? 0 : 500;
-  await sleep(sleepTime);
-
-  return usersData.users.slice(0, 9) as User[];
+  return filteredUsers.slice(0, 9) as User[];
 };

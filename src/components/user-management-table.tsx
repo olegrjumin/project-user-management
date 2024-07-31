@@ -112,14 +112,22 @@ const columns: ColumnDef<User>[] = [
   },
 ];
 
-export const UserManagementTable = () => {
+interface UserManagementTableProps {
+  query: string;
+}
+
+export const UserManagementTable: React.FC<UserManagementTableProps> = ({
+  query,
+}) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [rowSelection, setRowSelection] = React.useState({});
   const {
     data: users = [],
     isLoading,
     error,
-  } = useQuery<User[]>("users", fetchUsers);
+  } = useQuery<User[]>(["users", query], () => fetchUsers(query), {
+    keepPreviousData: true,
+  });
 
   const table = useReactTable({
     data: users,
