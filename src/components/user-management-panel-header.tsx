@@ -1,11 +1,13 @@
 import { SearchField } from "./search-field";
 import { Button } from "./ui/button";
 
-interface PanelHeaderProps {
+interface UserManagementPanelHeaderProps {
   onSearch: (value: string) => void;
 }
 
-export const PanelHeader: React.FC<PanelHeaderProps> = ({ onSearch }) => {
+export const UserManagementPanelHeader: React.FC<
+  UserManagementPanelHeaderProps
+> = ({ onSearch }) => {
   return (
     <header className="pt-4 pb-[18px]">
       <div className="flex items-center justify-between">
