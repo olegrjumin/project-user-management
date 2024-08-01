@@ -71,8 +71,9 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
                 <TableHead
                   key={header.id}
                   className={cn("h-8", {
-                    "w-[10px] p-2 pl-4": index === 0,
+                    "w-[20px] p-2 pl-4": index === 0,
                     "pl-0": index % 2 === 1,
+                    "w-[320px]": index === 1,
                   })}
                 >
                   {header.isPlaceholder

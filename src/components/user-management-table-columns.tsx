@@ -13,7 +13,7 @@ export const columns: ColumnDef<User>[] = [
   {
     id: "select",
     header: ({ table }) => (
-      <div className="flex items-center">
+      <div className="flex items-center w-[20px]">
         <Checkbox
           checked={table.getIsAllPageRowsSelected()}
           onCheckedChange={(value) => table.toggleAllRowsSelected(!!value)}
@@ -36,10 +36,10 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "name",
     header: () => {
-      return <div className="text-xs text-gray-60">User</div>;
+      return <div className="w-[320px] text-xs text-gray-60">User</div>;
     },
     cell: ({ row }) => (
-      <div className="flex items-center space-x-3">
+      <div className="flex items-center space-x-3 w-[320px]">
         <Avatar className="size-8">
           <AvatarImage src={row.original.avatar} alt={row.original.name} />
           <AvatarFallback>{row.original.name.charAt(0)}</AvatarFallback>
