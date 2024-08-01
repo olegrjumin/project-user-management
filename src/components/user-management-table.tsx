@@ -1,4 +1,3 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Table,
   TableBody,
@@ -8,169 +7,62 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { fetchUsers } from "@/lib/api";
+import { fetchUsers, UserApiResponse } from "@/lib/api";
 import { cn } from "@/lib/utils";
-import { User } from "@/types";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import React from "react";
-import { useQuery } from "react-query";
-import { ActionButton } from "./action-button";
-import { Checkbox } from "./checkbox";
-import { ArrowDownSmall, EditIcon, TrashIcon } from "./icons";
-import { RoleBadge } from "./role-badge";
-
-const columns: ColumnDef<User>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <div className="flex items-center">
-        <Checkbox
-          checked={table.getIsAllPageRowsSelected()}
-          onCheckedChange={(value) => table.toggleAllRowsSelected(!!value)}
-        />
-      </div>
-    ),
-    cell: ({ row }) => {
-      return (
-        <div>
-          <Checkbox
-            checked={row.getIsSelected()}
-            onCheckedChange={(value) => row.toggleSelected(!!value)}
-          />
-        </div>
-      );
-    },
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "name",
-    header: () => {
-      return <div className="text-xs text-gray-60">User</div>;
-    },
-    cell: ({ row }) => (
-      <div className="flex items-center space-x-3">
-        <Avatar className="size-8">
-          <AvatarImage src={row.original.avatar} alt={row.original.name} />
-          <AvatarFallback>{row.original.name.charAt(0)}</AvatarFallback>
-        </Avatar>
-        <div>
-          <div className="font-medium">{row.original.name}</div>
-          <div className="text-sm text-gray-60">{row.original.email}</div>
-        </div>
-      </div>
-    ),
-  },
-  {
-    accessorKey: "role",
-    header: ({ column }) => {
-      return (
-        <div
-          className="flex items-center cursor-pointer text-xs"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <span className="mr-2 text-gray-60">Permission</span>
-          {column.getIsSorted() === "asc" ? (
-            <ArrowDownSmall className="size-3 rotate-180" />
-          ) : (
-            <ArrowDownSmall className="size-3" />
-          )}
-        </div>
-      );
-    },
-    cell: ({ row }) => {
-      return <RoleBadge role={row.original.role} />;
-    },
-  },
-  {
-    id: "actions",
-    cell: ({ row }) => (
-      <div
-        className={cn(
-          `flex space-x-1 opacity-0 transition-opacity`,
-          row.getIsSelected() ? "opacity-100" : "opacity-0"
-        )}
-      >
-        <ActionButton
-          onClick={() => {}}
-          icon={<EditIcon className="size-4" />}
-          text="Edit"
-        />
-        <ActionButton
-          onClick={() => {}}
-          icon={<TrashIcon className="size-4" />}
-        />
-      </div>
-    ),
-  },
-];
+import { UserManagementTableAction } from "./user-management-table-action";
+import { columns } from "./user-management-table-columns";
 
 interface UserManagementTableProps {
   query: string;
 }
 
+export const FETCH_SIZE = 9;
+export const ROW_HEIGHT = 64;
+export const HEADER_HEIGHT = 32;
+export const VISIBLE_ROWS = 9;
+
 export const UserManagementTable: React.FC<UserManagementTableProps> = ({
   query,
 }) => {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [rowSelection, setRowSelection] = React.useState({});
-  const {
-    data: users = [],
-    isLoading,
-    error,
-  } = useQuery<User[]>(["users", query], () => fetchUsers(query), {
-    keepPreviousData: true,
+  const { data } = useInfiniteQuery<UserApiResponse>({
+    queryKey: ["users", query],
+    queryFn: async ({ pageParam = 0 }) => {
+      const start = (pageParam as number) * FETCH_SIZE;
+      return fetchUsers(start, FETCH_SIZE, query);
+    },
+    initialPageParam: 0,
+    getNextPageParam: (_, pages) => pages.length,
+    refetchOnWindowFocus: false,
   });
 
+  const flatData = React.useMemo(
+    () => data?.pages?.flatMap((page) => page.data) ?? [],
+    [data]
+  );
+
   const table = useReactTable({
-    data: users,
+    data: flatData,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onRowSelectionChange: setRowSelection,
     state: {
-      sorting,
       rowSelection,
     },
   });
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>An error occurred</div>;
-
-  const selectedCount = Object.keys(rowSelection).length;
-
   return (
     <div className="space-y-4 bg-white pt-6 pb-4 px-4 rounded-lg">
-      {selectedCount >= 0 && (
-        <div className="flex items-center h-8 ml-4">
-          <div className="text-gray-80 font-medium leading-normal mr-6">
-            {selectedCount} {selectedCount === 1 ? "user" : "users"} selected
-          </div>
-          {selectedCount > 0 && (
-            <div className="flex space-x-2">
-              <ActionButton
-                onClick={() => {}}
-                icon={<EditIcon className="size-4" />}
-                text="Edit"
-              />
-              <ActionButton
-                onClick={() => {}}
-                icon={<TrashIcon className="size-4" />}
-                text="Delete"
-              />
-            </div>
-          )}
-        </div>
-      )}
-
+      <UserManagementTableAction table={table} />
       <Table className="border-none">
         <TableHeader className="border-none">
           {table.getHeaderGroups().map((headerGroup) => (
