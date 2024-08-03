@@ -1,9 +1,9 @@
 import { User } from "@/types";
 import { Table } from "@tanstack/react-table";
-import { EditIcon, TrashIcon } from "lucide-react";
 import { ActionButton } from "./action-button";
+import { EditIcon, TrashIcon } from "./icons";
 
-export const UserManagementTableAction: React.FC<{
+export const UserManagementTableActions: React.FC<{
   table: Table<User>;
 }> = ({ table }) => {
   const selectedCount = Object.values(table.getSelectedRowModel().rows).filter(

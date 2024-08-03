@@ -11,7 +11,7 @@ export const UserManagementPanel = () => {
 
   return (
     <section>
-      <div className="mx-auto max-w-[714px]">
+      <div className="mx-auto max-w-[716px]">
         <UserManagementPanelHeader onSearch={handleSearch} />
         <UserManagementTable query={query} />
       </div>
