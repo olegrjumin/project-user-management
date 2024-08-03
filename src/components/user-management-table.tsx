@@ -30,7 +30,12 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
 }) => {
   const tableContainerRef = React.useRef<HTMLDivElement>(null);
   const [hasScrolled, setHasScrolled] = React.useState(false);
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>([
+    {
+      id: "role",
+      desc: false,
+    },
+  ]);
   const [rowSelection, setRowSelection] = React.useState({});
   const { data, fetchNextPage, isFetching } = useInfiniteQuery<UserApiResponse>(
     {
@@ -158,6 +163,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
             ))}
           </div>
           <div
+            data-testid="user-management-table-rows-wrapper"
             style={{
               display: "grid",
               height: `${rowVirtualizer.getTotalSize()}px`,

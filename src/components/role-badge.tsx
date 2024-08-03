@@ -32,6 +32,7 @@ export const RoleBadge: React.FC<RoleBadgeProps> = ({ role, className }) => {
 
   return (
     <div
+      data-testid="role-badge"
       className={cn(
         "h-6 px-2 py-[3px] rounded inline-flex items-center",
         roleClassName,

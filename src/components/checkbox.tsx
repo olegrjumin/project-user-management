@@ -42,6 +42,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
           checked ? "bg-brand-50 border-brand-50" : "bg-white border-gray-40",
           disabled && "opacity-50 cursor-not-allowed"
         )}
+        data-testid="checkbox"
       >
         <svg
           width="10"

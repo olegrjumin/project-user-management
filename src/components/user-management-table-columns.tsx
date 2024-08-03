@@ -50,7 +50,7 @@ export const columns: ColumnDef<User>[] = [
         </div>
       </div>
     ),
-    size: 360,
+    size: 300,
   },
   {
     accessorKey: "role",
