@@ -6,6 +6,7 @@ import {
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
+  OnChangeFn,
   Row,
   SortingState,
   useReactTable,
@@ -80,13 +81,18 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
     fetchMoreOnBottomReached(tableContainerRef.current);
   }, [fetchMoreOnBottomReached]);
 
+  const handleSortingChange: OnChangeFn<SortingState> = (updaterOrValue) => {
+    setSorting(updaterOrValue);
+    setRowSelection({});
+  };
+
   const table = useReactTable({
     data: flatData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
+    onSortingChange: handleSortingChange,
     state: {
       rowSelection,
       sorting,
