@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
 import { User } from "@/types";
 
+import { cn } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { ActionButton } from "./action-button";
 import { Checkbox } from "./checkbox";
@@ -50,7 +50,7 @@ export const columns: ColumnDef<User>[] = [
         </div>
       </div>
     ),
-    size: 300,
+    size: 320,
   },
   {
     accessorKey: "role",
@@ -78,9 +78,10 @@ export const columns: ColumnDef<User>[] = [
     id: "actions",
     cell: ({ row }) => (
       <div
+        data-testid={`row-actions-${row.id}`}
+        data-state={row.getIsSelected() ? "selected" : undefined}
         className={cn(
-          `flex space-x-1 opacity-0 transition-opacity`,
-          row.getIsSelected() ? "opacity-100" : "opacity-0"
+          `flex space-x-1 invisible data-[state=selected]:group-hover:visible`
         )}
       >
         <ActionButton

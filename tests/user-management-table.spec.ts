@@ -80,7 +80,9 @@ test("should select individual users", async ({ page }) => {
   expect(isSelectionTextVisible).toBeTruthy();
 });
 
-test("should select all users", async ({ page }) => {
+test("should select all users, when `select all` is pressed", async ({
+  page,
+}) => {
   await page.goto("/");
 
   await waitForTableToBeLoaded(page);
@@ -138,4 +140,60 @@ test("should sort permissions", async ({ page }) => {
       )
     );
   });
+});
+
+test("should load more items when scrolled", async ({ page }) => {
+  await page.goto("/");
+  await waitForTableToBeLoaded(page);
+
+  await page.$eval(
+    '[data-testid="user-management-table-container"]',
+    (container) => {
+      container.scrollTop = 500;
+      container.dispatchEvent(new Event("scroll"));
+    }
+  );
+
+  await page.waitForFunction(
+    () => {
+      const rows = document.querySelectorAll(
+        '[data-testid^="user-management-table-row-"]'
+      );
+      return rows.length > 9;
+    },
+    { timeout: 5000 }
+  );
+
+  const selectAllCheckbox = await page.$(
+    '[data-testid="user-management-table-header"] [data-testid="checkbox"]'
+  );
+  await selectAllCheckbox?.check();
+
+  expect(await page.isVisible('text="18 users selected"')).toBeTruthy();
+});
+
+test("should show actions when row is hovered over and selected", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  await waitForTableToBeLoaded(page);
+
+  const rowCheckbox = await page.$(
+    '[data-testid^="user-management-table-row-0"] [data-testid="checkbox"]'
+  );
+  await rowCheckbox?.check();
+
+  const actions = await page.$(
+    '[data-testid^="user-management-table-row-0"] [data-testid^="row-actions-0"]'
+  );
+
+  expect(actions).not.toBeNull();
+
+  await actions?.hover();
+
+  await page.waitForTimeout(500);
+
+  expect(await actions?.isVisible()).toBeTruthy();
+  expect(await actions?.textContent()).toContain("Edit");
 });

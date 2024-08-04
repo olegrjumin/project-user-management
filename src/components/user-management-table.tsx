@@ -109,6 +109,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
       <UserManagementTableActions table={table} />
 
       <div
+        data-testid="user-management-table-container"
         ref={tableContainerRef}
         style={{
           height: tableHeight,
@@ -185,7 +186,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
                   data-state={row.getIsSelected() ? "selected" : undefined}
                   key={row.id}
                   className={cn(
-                    "border-white border-b-4 data-[state=selected]:bg-gray-10 data-[state=selected]:rounded-tr-lg data-[state=selected]:rounded-br-lg"
+                    "border-white border-b-4 group data-[state=selected]:bg-gray-10 data-[state=selected]:rounded-tr-lg data-[state=selected]:rounded-br-lg"
                   )}
                   style={{
                     display: "flex",
