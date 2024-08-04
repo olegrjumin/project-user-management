@@ -1,12 +1,11 @@
-import { User } from "@/types";
-
 import { cn } from "@/lib/utils";
+import { User } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
-import { ActionButton } from "./action-button";
-import { Checkbox } from "./checkbox";
-import { ArrowDownSmall, EditIcon, TrashIcon } from "./icons";
-import { RoleBadge } from "./role-badge";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { ActionButton } from "../ui/action-button";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Checkbox } from "../ui/checkbox";
+import { ArrowDownSmall, EditIcon, TrashIcon } from "../ui/icons";
+import { RoleBadge } from "../ui/role-badge";
 
 export const columns: ColumnDef<User>[] = [
   {

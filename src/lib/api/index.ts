@@ -1,8 +1,7 @@
 import { User } from "@/types";
 import { ColumnSort, SortingState } from "@tanstack/react-table";
 import usersData from "./users.json";
-
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+import { sleep } from "../utils";
 
 export type UserApiResponse = {
   data: User[];

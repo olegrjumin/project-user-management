@@ -1,5 +1,5 @@
+import { Button } from "../ui/button";
 import { SearchField } from "./search-field";
-import { Button } from "./ui/button";
 
 interface UserManagementPanelHeaderProps {
   onSearch: (value: string) => void;

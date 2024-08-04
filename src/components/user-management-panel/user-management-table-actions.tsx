@@ -1,7 +1,7 @@
 import { User } from "@/types";
 import { Table } from "@tanstack/react-table";
-import { ActionButton } from "./action-button";
-import { EditIcon, TrashIcon } from "./icons";
+import { ActionButton } from "../ui/action-button";
+import { EditIcon, TrashIcon } from "../ui/icons";
 
 export const UserManagementTableActions: React.FC<{
   table: Table<User>;

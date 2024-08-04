@@ -1,4 +1,4 @@
-import { UserManagementPanel } from "./components/user-management-panel";
+import { UserManagementPanel } from "./components/user-management-panel/user-management-panel";
 
 function App() {
   return (
